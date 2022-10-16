@@ -64,9 +64,8 @@ class _CategoryExpensesScreenState extends State<CategoryExpensesScreen> {
                           key: Key(datum.hashCode.toString()),
                           onDismissed: (direction) async {
                             LoadingDialog.show(context);
-                            print(await db.rawDelete(
-                                SQLStatements.deleteExpense, [datum['sid']]));
                             await updateData();
+                            if (!mounted) return;
                             LoadingDialog.hide(context);
                             ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
@@ -74,7 +73,7 @@ class _CategoryExpensesScreenState extends State<CategoryExpensesScreen> {
                           },
                           background: Container(
                             color: Colors.red,
-                            padding: EdgeInsets.symmetric(horizontal: 18),
+                            padding: const EdgeInsets.symmetric(horizontal: 18),
                             child: Align(
                               alignment: Alignment.centerRight,
                               child: Row(
@@ -86,7 +85,7 @@ class _CategoryExpensesScreenState extends State<CategoryExpensesScreen> {
                                         color: Colors.red.shade50,
                                         fontWeight: FontWeight.bold),
                                   ),
-                                  SizedBox(width: 8),
+                                  const SizedBox(width: 8),
                                   Icon(
                                     Icons.delete,
                                     color: Colors.red.shade50,

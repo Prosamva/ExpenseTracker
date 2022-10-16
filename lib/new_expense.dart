@@ -125,6 +125,7 @@ class _NewExpenseScreenState extends State<NewExpenseScreen> {
             LoadingDialog.show(context);
             await db.rawInsert(SQLStatements.insertExpense,
                 [amount, selectedCategory, timestamp.toIso8601String()]);
+            if (!mounted) return;
             LoadingDialog.hide(context);
             Navigator.pop(context, true);
           }

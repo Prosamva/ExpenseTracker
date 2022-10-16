@@ -89,8 +89,11 @@ class _MyHomePageState extends State<MyHomePage> {
     DateTime edge = DateTime(todayDate.year, todayDate.month, todayDate.day);
     DateTime endEdge =
         DateTime(todayDate.year, todayDate.month, todayDate.day, 23, 59, 59);
-    DateTimeRange range = DateTimeRange(start: edge, end: endEdge);
+    DateTimeRange? range;
     switch (mode) {
+      case 0:
+        range = DateTimeRange(start: edge, end: endEdge);
+        break;
       case 1:
         range = DateTimeRange(
             start: edge.subtract(const Duration(days: 1)),
@@ -104,7 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
         range = DateTimeRange(
             start: edge.subtract(const Duration(days: 30)), end: endEdge);
     }
-    setState(() => dateRange = range);
+    setState(() => dateRange = range??dateRange);
   }
 
   @override
@@ -115,7 +118,6 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: [
           PopupMenuButton<String>(
             onSelected: (String value) async {
-              print(await db.rawQuery('SELECT * FROM Expense'));
               switch (value) {
                 case 'Manage Categories':
                   await Navigator.push(
@@ -137,6 +139,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     await db.execute(SQLStatements.truncateCategories);
                     await db.rawInsert(SQLStatements.insertDefaultCategories);
                     await updateStats();
+                    if (!mounted) return;
                     LoadingDialog.hide(context);
                   });
               }
@@ -300,6 +303,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 SQLStatements.deleteExpense, [datum['sid']]);
                             // setState(()=>data.removeAt(index));
                             await updateStats();
+                            if (!mounted) return;
                             LoadingDialog.hide(context);
                             ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
@@ -307,7 +311,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           },
                           background: Container(
                             color: Colors.red,
-                            padding: EdgeInsets.symmetric(horizontal: 18),
+                            padding: const EdgeInsets.symmetric(horizontal: 18),
                             child: Align(
                               alignment: Alignment.centerRight,
                               child: Row(
@@ -319,7 +323,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                         color: Colors.red.shade50,
                                         fontWeight: FontWeight.bold),
                                   ),
-                                  SizedBox(width: 8),
+                                  const SizedBox(width: 8),
                                   Icon(
                                     Icons.delete,
                                     color: Colors.red.shade50,

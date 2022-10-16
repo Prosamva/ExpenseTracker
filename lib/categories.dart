@@ -62,13 +62,14 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen> {
                         await db.rawDelete(
                             SQLStatements.deleteCategory, [entry['id']]);
                         await updateCategories();
+                        if (!mounted) return;
                         LoadingDialog.hide(context);
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Category removed!')));
                       },
                       background: Container(
                         color: Colors.red,
-                        padding: EdgeInsets.symmetric(horizontal: 18),
+                        padding: const EdgeInsets.symmetric(horizontal: 18),
                         child: Align(
                           alignment: Alignment.centerRight,
                           child: Row(
@@ -80,7 +81,7 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen> {
                                     color: Colors.red.shade50,
                                     fontWeight: FontWeight.bold),
                               ),
-                              SizedBox(width: 8),
+                              const SizedBox(width: 8),
                               Icon(
                                 Icons.delete,
                                 color: Colors.red.shade50,
@@ -152,6 +153,7 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen> {
                           await db.rawInsert(
                               SQLStatements.insertCategory, [state.value]);
                           await updateCategories();
+                          if (!mounted) return;
                           LoadingDialog.hide(dContext);
                           Navigator.pop(dContext, true);
                         },
